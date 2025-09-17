@@ -1,0 +1,609 @@
+---
+title: "Bibliometrics Analysis for Research Bias--Long"
+format: html
+editor: source
+---
+
+## Data
+
+```{r getData}
+hadzaMen = readxl::read_excel('hadza men-titleAbstract.xlsx', skip=1)
+hadzaWomen = readxl::read_excel('hadza women-titleAbstract.xlsx', skip=1)
+
+library(janitor)
+hadzaMen = clean_names(hadzaMen)
+hadzaWomen = clean_names(hadzaWomen)
+```
+
+## DotPlot
+
+```{r dotPlot}
+library(dplyr)
+hadzaMenAgg = hadzaMen |>
+  group_by(pub_year) |>
+  summarise(total_count = n())
+hadzaMenAgg$dataset = 'Hadza_Men'
+
+hadzaWomenAgg = hadzaWomen |>
+  group_by(pub_year) |>
+  summarise(total_count = n())
+hadzaWomenAgg$dataset = 'Hadza_Women'
+
+#combine data
+hadzaPubs = rbind(hadzaWomenAgg, hadzaMenAgg)
+
+#plot
+library(ggplot2)
+#rescale to exclude early 1931 pub for ease of viewing
+ggplot(hadzaPubs, aes(x = pub_year, y = dataset, color = dataset, size = total_count)) +
+  geom_point() +
+  labs(title = "",
+       x = "Publication Year",
+       y = "",
+       color = "") +
+  scale_color_viridis_d(end = .7, guide = FALSE) +
+  scale_x_continuous(limits = c(1999, max(hadzaPubs$pub_year)),
+                     breaks = seq(1999, max(hadzaPubs$pub_year), by = 5)) +
+  theme_bw() +
+theme(
+    text = element_text(size = 12), 
+    axis.title.x = element_text(size = 12),
+    axis.title.y = element_text(size = 12), 
+    axis.text.x = element_text(color='black', size=12),
+    axis.text.y = element_text(color='black', size=12),
+    legend.text = element_text(size = 12),  
+    legend.title = element_text(size = 12)
+  )
+ggsave('fig3-pubTimeline.tiff', plot = last_plot())
+```
+
+## Final networks with metrics
+
+```{python}
+import json
+import networkx as nx
+import matplotlib.pyplot as plt
+
+def load_network_data(file_path):
+    with open(file_path, 'r') as f:
+        data = json.load(f)
+    return data
+
+def visualize_focused_network(file_path, output_filename, title, focus_term):
+    network_data = load_network_data(file_path)
+    G = nx.Graph()
+    node_cluster = {}
+    if 'network' in network_data and 'items' in network_data['network']:
+        for item in network_data['network']['items']:
+            node_id = item['id']
+            attributes = {k: v for k, v in item.items() if k not in ['id', 'x', 'y', 'cluster']}
+            G.add_node(node_id, **attributes)
+            node_cluster[node_id] = item.get('cluster')
+
+    if 'network' in network_data and 'links' in network_data['network']:
+        for link in network_data['network']['links']:
+            source = link.get('source_id')
+            target = link.get('target_id')
+            weight = link.get('strength', 1)
+            if source and target:
+                G.add_edge(source, target, weight=weight)
+
+    # Create a subgraph focused on the focus_term
+    focused_nodes = set([focus_term])
+    for u, v in G.edges():
+        if u == focus_term or v == focus_term:
+            focused_nodes.add(u)
+            focused_nodes.add(v)
+    focused_graph = G.subgraph(focused_nodes)
+
+    clusters = sorted(list(set(node_cluster.values())))
+    colors = ['#1f78b4', '#33a02c', '#a6cee3', '#b2df8a', '#fb9a99', '#e31a1c', '#fdbf6f', '#ff7f00', '#cab2d6', '#6a3d9a', '#ffff99', '#b15928']
+    node_colors = [colors[i % len(colors)] if node in node_cluster else 'gray' for i, node in enumerate(focused_graph.nodes())]
+    node_sizes = [focused_graph.nodes[node].get('weights', {}).get('Occurrences', 5) * 120 for node in focused_graph.nodes()]
+    edge_widths = [focused_graph.edges[u, v].get('weight', 1) / 5 for u, v in focused_graph.edges()]
+
+    plt.figure(figsize=(12, 12))
+    pos = nx.spring_layout(focused_graph, k=1.0, iterations=300)
+    nx.draw_networkx_nodes(focused_graph, pos, node_size=node_sizes, node_color=node_colors, alpha=0.7)
+    nx.draw_networkx_edges(focused_graph, pos, width=edge_widths, edge_color='gray', alpha=0.5)
+    nx.draw_networkx_labels(focused_graph, pos, font_size=10, font_family='sans-serif')
+    plt.title(title, fontsize=16)
+    plt.axis('off')
+    plt.tight_layout()
+    plt.savefig(output_filename, bbox_inches='tight')
+    plt.close()
+
+    # Calculate and print network metrics
+    print(f"\n--- Network Metrics for: {title} ---")
+    print(f"Number of Nodes: {focused_graph.number_of_nodes()}")
+    print(f"Number of Edges: {focused_graph.number_of_edges()}")
+    print(f"Average Degree: {sum(dict(focused_graph.degree()).values()) / focused_graph.number_of_nodes()}")
+    print(f"Network Density: {nx.density(focused_graph)}")
+    if focused_graph.number_of_nodes() > 2:  # Clustering coefficient is not defined for graphs with 2 or fewer nodes
+        print(f"Average Clustering Coefficient: {nx.average_clustering(focused_graph)}")
+    else:
+        print("Average Clustering Coefficient: Not defined for graphs with 2 or fewer nodes")
+    if nx.is_connected(focused_graph):  # Corrected line
+        print(f"Modularity: {nx.algorithms.community.quality.modularity(focused_graph, nx.algorithms.community.greedy_modularity_communities(focused_graph))}")
+    else:
+        print("Modularity: Not defined for disconnected graphs")
+
+# Visualize focused networks again with adjustments
+visualize_focused_network('network-hadzamen-titleAbs.json', 'hadzamen_focused_network_enhanced.png', '', 'Hadza men')
+visualize_focused_network('network-hadzawomen-titleAbs.json', 'hadzawomen_focused_network_enhanced.png', '', 'Hadza women')
+
+print("Enhanced Hadza men focused network visualization saved as hadzamen_focused_network_enhanced.png")
+print("Enhanced Hadza women focused network visualization saved as hadzawomen_focused_network_enhanced.png")
+
+```
+
+### FINAL PYTHON WITH TERMS
+
+```{python}
+import json
+import networkx as nx
+import matplotlib.pyplot as plt
+
+def load_network_data(file_path):
+    with open(file_path, 'r') as f:
+        data = json.load(f)
+    return data
+
+def visualize_focused_network(file_path, output_filename, title, focus_term):
+    network_data = load_network_data(file_path)
+    G = nx.Graph()
+    node_cluster = {}
+    if 'network' in network_data and 'items' in network_data['network']:
+        for item in network_data['network']['items']:
+            node_id = item['id']
+            attributes = {k: v for k, v in item.items() if k not in ['id', 'x', 'y', 'cluster']}
+            G.add_node(node_id, **attributes)
+            node_cluster[node_id] = item.get('cluster') # Access cluster information
+
+    if 'network' in network_data and 'links' in network_data['network']:
+        for link in network_data['network']['links']:
+            source = link.get('source_id')
+            target = link.get('target_id')
+            weight = link.get('strength', 1)
+            if source and target:
+                G.add_edge(source, target, weight=weight)
+
+    # ... (rest of your visualization code) ...
+
+    return G, node_cluster # Return the graph and cluster information
+
+# Visualize focused networks and get cluster information
+men_graph, men_clusters = visualize_focused_network('network-hadzamen-titleAbs.json', 'hadzamen_focused_network_enhanced.png', 'Co-occurrences with Hadza Men', 'Hadza men')
+women_graph, women_clusters = visualize_focused_network('network-hadzawomen-titleAbs.json', 'hadzawomen_focused_network_enhanced.png', 'Co-occurrences with Hadza Women', 'Hadza women')
+
+# Now you have the cluster information in 'men_clusters' and 'women_clusters'
+# You can process these dictionaries to extract the terms for each cluster
+```
+
+
+```{python}
+def get_cluster_terms(graph, clusters):
+    cluster_terms = {}
+    for node, cluster_id in clusters.items():
+        if cluster_id not in cluster_terms:
+            cluster_terms[cluster_id] = []
+        cluster_terms[cluster_id].append(node)
+    return cluster_terms
+
+men_cluster_terms = get_cluster_terms(men_graph, men_clusters)
+women_cluster_terms = get_cluster_terms(women_graph, women_clusters)
+
+print("\nCluster Terms for Hadza Men Network:")
+for cluster, terms in men_cluster_terms.items():
+    print(f"Cluster {cluster}: {', '.join(terms)}")
+
+print("\nCluster Terms for Hadza Women Network:")
+for cluster, terms in women_cluster_terms.items():
+    print(f"Cluster {cluster}: {', '.join(terms)}")
+```
+## get top five terms
+
+```{python}
+import json
+
+def get_top_n_terms(file_path, n=10):
+    try:
+        with open(file_path, 'r') as f:
+            network_data = json.load(f)
+    except FileNotFoundError:
+        print(f"Error: File not found at {file_path}")
+        return None
+
+    term_occurrences = {}
+    if 'network' in network_data and 'items' in network_data['network']:
+        for item in network_data['network']['items']:
+            term = item.get('id')
+            occurrences = item.get('weights', {}).get('Occurrences', 0)
+            if term:
+                term_occurrences[term] = occurrences
+
+    sorted_terms = sorted(term_occurrences.items(), key=lambda item: item[1], reverse=True)
+    top_n = sorted_terms[:n]
+    return top_n
+
+# Get top 5 terms for Hadza men network
+top_men_terms = get_top_n_terms('network-hadzamen-titleAbs.json')
+if top_men_terms:
+    print("\nTop 5 Terms in Hadza Men Network (by Occurrences):")
+    for term, count in top_men_terms:
+        print(f"{term}: {count}")
+
+# Get top 5 terms for Hadza women network
+top_women_terms = get_top_n_terms('network-hadzawomen-titleAbs.json')
+if top_women_terms:
+    print("\nTop 5 Terms in Hadza Women Network (by Occurrences):")
+    for term, count in top_women_terms:
+        print(f"{term}: {count}")
+```
+
+## Top two per cluster
+```{python}
+import json
+from collections import defaultdict
+
+def get_top_n_terms_per_cluster(file_path, n=2):
+    try:
+        with open(file_path, 'r') as f:
+            network_data = json.load(f)
+    except FileNotFoundError:
+        print(f"Error: File not found at {file_path}")
+        return None
+
+    cluster_term_occurrences = defaultdict(lambda: defaultdict(int))
+    if 'network' in network_data and 'items' in network_data['network']:
+        for item in network_data['network']['items']:
+            term = item.get('id')
+            occurrences = item.get('weights', {}).get('Occurrences', 0)
+            cluster_id = item.get('cluster')
+            if term and cluster_id is not None:
+                cluster_term_occurrences[cluster_id][term] = occurrences
+
+    top_n_per_cluster = {}
+    for cluster_id, term_counts in cluster_term_occurrences.items():
+        sorted_terms = sorted(term_counts.items(), key=lambda item: item[1], reverse=True)
+        top_n = sorted_terms[:n]
+        top_n_per_cluster[cluster_id] = top_n
+
+    return top_n_per_cluster
+
+# Get top 2 terms per cluster for Hadza men network
+top_men_cluster_terms = get_top_n_terms_per_cluster('network-hadzamen-titleAbs.json')
+if top_men_cluster_terms:
+    print("\nTop 2 Terms per Cluster in Hadza Men Network (by Occurrences):")
+    for cluster, top_terms in top_men_cluster_terms.items():
+        print(f"Cluster {cluster}: {', '.join([f'{term} ({count})' for term, count in top_terms])}")
+
+# Get top 2 terms per cluster for Hadza women network
+top_women_cluster_terms = get_top_n_terms_per_cluster('network-hadzawomen-titleAbs.json')
+if top_women_cluster_terms:
+    print("\nTop 2 Terms per Cluster in Hadza Women Network (by Occurrences):")
+    for cluster, top_terms in top_women_cluster_terms.items():
+        print(f"Cluster {cluster}: {', '.join([f'{term} ({count})' for term, count in top_terms])}")
+```
+
+
+
+## using network-hadza-titleAbs.json file
+```{python}
+import json
+import networkx as nx
+import matplotlib.pyplot as plt
+
+def load_network_data(file_path):
+    with open(file_path, 'r') as f:
+        data = json.load(f)
+    return data
+
+def visualize_gender_focused_network(file_path, output_filename, title, gender_filter):
+    network_data = load_network_data(file_path)
+    G = nx.Graph()
+    node_cluster = {}
+    if 'network' in network_data and 'items' in network_data['network']:
+        for item in network_data['network']['items']:
+            node_id = item['id']
+            attributes = {k: v for k, v in item.items() if k not in ['id', 'x', 'y', 'cluster']}
+            G.add_node(node_id, **attributes)
+            node_cluster[node_id] = item.get('cluster')
+
+    relevant_nodes = set()
+    if 'network' in network_data and 'links' in network_data['network']:
+        for link in network_data['network']['links']:
+            source = link.get('source_id')
+            target = link.get('target_id')
+            weight = link.get('strength', 1)
+            if source and target and (gender_filter in [source, target]):
+                G.add_edge(source, target, weight=weight)
+                relevant_nodes.add(source)
+                relevant_nodes.add(target)
+
+    # Create a subgraph focused on the gender term and its connections
+    focused_graph = G.subgraph(relevant_nodes)
+
+    clusters = sorted(list(set(node_cluster.values())))
+    colors = ['#1f78b4', '#33a02c', '#a6cee3', '#b2df8a', '#fb9a99', '#e31a1c', '#fdbf6f', '#ff7f00', '#cab2d6', '#6a3d9a', '#ffff99', '#b15928']
+    node_colors = [colors[i % len(colors)] if node in node_cluster else 'gray' for i, node in enumerate(focused_graph.nodes())]
+    node_sizes = [focused_graph.nodes[node].get('weights', {}).get('Occurrences', 5) * 120 for node in focused_graph.nodes()]
+    edge_widths = [focused_graph.edges[u, v].get('weight', 1) / 5 for u, v in focused_graph.edges()]
+
+    plt.figure(figsize=(12, 12))
+    pos = nx.spring_layout(focused_graph, k=0.5, iterations=200)
+    nx.draw_networkx_nodes(focused_graph, pos, node_size=node_sizes, node_color=node_colors, alpha=0.7)
+    nx.draw_networkx_edges(focused_graph, pos, width=edge_widths, edge_color='gray', alpha=0.5)
+    nx.draw_networkx_labels(focused_graph, pos, font_size=10, font_family='sans-serif')
+    plt.title(title, fontsize=16)
+    plt.axis('off')
+    plt.tight_layout()
+    plt.savefig(output_filename, bbox_inches='tight')
+    plt.close()
+
+    return focused_graph, {node: node_cluster.get(node) for node in focused_graph.nodes()}
+
+def get_cluster_terms(graph, clusters):
+    cluster_terms = defaultdict(list)
+    for node, cluster_id in clusters.items():
+        if cluster_id is not None:
+            cluster_terms[cluster_id].append(node)
+    return cluster_terms
+
+# Visualize gender-focused networks and get cluster information
+men_focused_graph, men_focused_clusters = visualize_gender_focused_network('network-hadza-titleAbs.json', 'hadza_men_focused_network.png', 'Co-occurrences with "men" in Hadza Literature', 'men')
+women_focused_graph, women_focused_clusters = visualize_gender_focused_network('network-hadza-titleAbs.json', 'hadza_women_focused_network.png', 'Co-occurrences with "women" in Hadza Literature', 'women')
+
+# Get top 2 terms per cluster for the focused networks
+def get_top_n_terms_per_cluster_from_graph(graph, clusters, n=2):
+    cluster_term_occurrences = defaultdict(lambda: defaultdict(int))
+    for node in graph.nodes(data=True):
+        term = node[0]
+        attributes = node[1]
+        occurrences = attributes.get('weights', {}).get('Occurrences', 0)
+        cluster_id = clusters.get(term)
+        if cluster_id is not None:
+            cluster_term_occurrences[cluster_id][term] = occurrences
+
+    top_n_per_cluster = {}
+    for cluster_id, term_counts in cluster_term_occurrences.items():
+        sorted_terms = sorted(term_counts.items(), key=lambda item: item[1], reverse=True)
+        top_n = sorted_terms[:n]
+        top_n_per_cluster[cluster_id] = top_n
+    return top_n_per_cluster
+
+top_men_focused_cluster_terms = get_top_n_terms_per_cluster_from_graph(men_focused_graph, men_focused_clusters)
+if top_men_focused_cluster_terms:
+    print("\nTop 2 Terms per Cluster in Hadza Literature (Focused on 'men'):")
+    for cluster, top_terms in top_men_focused_cluster_terms.items():
+        print(f"Cluster {cluster}: {', '.join([f'{term} ({count})' for term, count in top_terms])}")
+
+top_women_focused_cluster_terms = get_top_n_terms_per_cluster_from_graph(women_focused_graph, women_focused_clusters)
+if top_women_focused_cluster_terms:
+    print("\nTop 2 Terms per Cluster in Hadza Literature (Focused on 'women'):")
+    for cluster, top_terms in top_women_focused_cluster_terms.items():
+        print(f"Cluster {cluster}: {', '.join([f'{term} ({count})' for term, count in top_terms])}")
+
+print("\nGender-focused network visualizations saved as hadza_men_focused_network.png and hadza_women_focused_network.png")
+```
+
+
+## one with men and women from hadza file
+
+```{python}
+import json
+import networkx as nx
+import matplotlib.pyplot as plt
+from collections import defaultdict
+
+def load_network_data(file_path):
+    with open(file_path, 'r') as f:
+        data = json.load(f)
+    return data
+
+def visualize_combined_gender_focused_network(file_path, output_filename, title, gender_terms=["men", "women"]):
+    network_data = load_network_data(file_path)
+    G = nx.Graph()
+    node_cluster = {}
+    if 'network' in network_data and 'items' in network_data['network']:
+        for item in network_data['network']['items']:
+            node_id = item['id']
+            attributes = {k: v for k, v in item.items() if k not in ['id', 'x', 'y', 'cluster']}
+            G.add_node(node_id, **attributes)
+            node_cluster[node_id] = item.get('cluster')
+
+    relevant_nodes = set()
+    if 'network' in network_data and 'links' in network_data['network']:
+        for link in network_data['network']['links']:
+            source = link.get('source_id')
+            target = link.get('target_id')
+            weight = link.get('strength', 1)
+            if source and target and (any(term in [source, target] for term in gender_terms)):
+                G.add_edge(source, target, weight=weight)
+                relevant_nodes.add(source)
+                relevant_nodes.add(target)
+
+    # Create a subgraph focused on the gender terms and their connections
+    focused_graph = G.subgraph(relevant_nodes)
+
+    clusters = sorted(list(set(node_cluster.values())))
+    colors = ['#1f78b4', '#33a02c', '#a6cee3', '#b2df8a', '#fb9a99', '#e31a1c', '#fdbf6f', '#ff7f00', '#cab2d6', '#6a3d9a', '#ffff99', '#b15928']
+    node_colors = [colors[i % len(colors)] if node in node_cluster else 'gray' for i, node in enumerate(focused_graph.nodes())]
+    node_sizes = [focused_graph.nodes[node].get('weights', {}).get('Occurrences', 5) * 120 for node in focused_graph.nodes()]
+    edge_widths = [focused_graph.edges[u, v].get('weight', 1) / 5 for u, v in focused_graph.edges()]
+
+    plt.figure(figsize=(12, 12))
+    pos = nx.spring_layout(focused_graph, k=0.5, iterations=200)
+    nx.draw_networkx_nodes(focused_graph, pos, node_size=node_sizes, node_color=node_colors, alpha=0.7)
+    nx.draw_networkx_edges(focused_graph, pos, width=edge_widths, edge_color='gray', alpha=0.5)
+    nx.draw_networkx_labels(focused_graph, pos, font_size=10, font_family='sans-serif')
+    plt.title(title, fontsize=16)
+    plt.axis('off')
+    plt.tight_layout()
+    plt.savefig(output_filename, bbox_inches='tight')
+    plt.close()
+
+    return focused_graph, {node: node_cluster.get(node) for node in focused_graph.nodes()}
+
+def get_top_n_terms_per_cluster_from_graph(graph, clusters, n=2):
+    cluster_term_occurrences = defaultdict(lambda: defaultdict(int))
+    for node in graph.nodes(data=True):
+        term = node[0]
+        attributes = node[1]
+        occurrences = attributes.get('weights', {}).get('Occurrences', 0)
+        cluster_id = clusters.get(term)
+        if cluster_id is not None:
+            cluster_term_occurrences[cluster_id][term] = occurrences
+
+    top_n_per_cluster = {}
+    for cluster_id, term_counts in cluster_term_occurrences.items():
+        sorted_terms = sorted(term_counts.items(), key=lambda item: item[1], reverse=True)
+        top_n = sorted_terms[:n]
+        top_n_per_cluster[cluster_id] = top_n
+    return top_n_per_cluster
+
+# Visualize combined gender-focused network and get cluster information
+combined_gender_focused_graph, combined_gender_focused_clusters = visualize_combined_gender_focused_network(
+    'network-hadza-titleAbs.json',
+    'hadza_gender_focused_network.png',
+    'Co-occurrences with "men" or "women" in Hadza Literature',
+    gender_terms=["men", "women"]
+)
+
+# Get top 2 terms per cluster for the combined focused network
+top_combined_gender_focused_cluster_terms = get_top_n_terms_per_cluster_from_graph(
+    combined_gender_focused_graph,
+    combined_gender_focused_clusters
+)
+
+if top_combined_gender_focused_cluster_terms:
+    print("\nTop 2 Terms per Cluster in Hadza Literature (Focused on 'men' or 'women'):")
+    for cluster, top_terms in top_combined_gender_focused_cluster_terms.items():
+        print(f"Cluster {cluster}: {', '.join([f'{term} ({count})' for term, count in top_terms])}")
+
+print("\nCombined gender-focused network visualization saved as hadza_gender_focused_network.png")
+
+```
+
+
+## same as above but with color for men and women
+
+```{python}
+import json
+import networkx as nx
+import matplotlib.pyplot as plt
+from collections import defaultdict
+
+def load_network_data(file_path):
+    with open(file_path, 'r') as f:
+        data = json.load(f)
+    return data
+
+def visualize_combined_gender_focused_network_colored(file_path, output_filename, title, gender_terms=["men", "women"]):
+    network_data = load_network_data(file_path)
+    G = nx.Graph()
+    node_cluster = {}
+    gender_nodes = set(gender_terms)
+
+    if 'network' in network_data and 'items' in network_data['network']:
+        for item in network_data['network']['items']:
+            node_id = item['id']
+            attributes = {k: v for k, v in item.items() if k not in ['id', 'x', 'y', 'cluster']}
+            G.add_node(node_id, **attributes)
+            node_cluster[node_id] = item.get('cluster')
+
+    relevant_nodes = set(gender_nodes)
+    gender_connections = defaultdict(set)
+
+    if 'network' in network_data and 'links' in network_data['network']:
+        for link in network_data['network']['links']:
+            source = link.get('source_id')
+            target = link.get('target_id')
+            if source and target:
+                if any(term in [source, target] for term in gender_terms):
+                    G.add_edge(source, target, weight=link.get('strength', 1))
+                    relevant_nodes.add(source)
+                    relevant_nodes.add(target)
+                    if source in gender_terms and target not in gender_terms:
+                        gender_connections[target].add(source)
+                    elif target in gender_terms and source not in gender_terms:
+                        gender_connections[source].add(target)
+
+    focused_graph = G.subgraph(relevant_nodes)
+
+    node_colors = []
+    for node in focused_graph.nodes():
+        if node in gender_nodes:
+            if node == "men":
+                node_colors.append('skyblue')
+            elif node == "women":
+                node_colors.append('salmon')
+            else:
+                node_colors.append('lightgray')
+        elif node in gender_connections:
+            if "men" in gender_connections[node] and "women" in gender_connections[node]:
+                node_colors.append('mediumpurple')  # Connected to both - using a valid Matplotlib color
+            elif "men" in gender_connections[node]:
+                node_colors.append('lightblue')
+            elif "women" in gender_connections[node]:
+                node_colors.append('lightcoral')
+            else:
+                node_colors.append('lightgray')
+        else:
+            node_colors.append('lightgray')
+
+    node_sizes = [focused_graph.nodes[node].get('weights', {}).get('Occurrences', 5) * 120 for node in focused_graph.nodes()]
+    edge_widths = [focused_graph.edges[u, v].get('weight', 1) / 5 for u, v in focused_graph.edges()]
+
+    plt.figure(figsize=(12, 12))
+    pos = nx.spring_layout(focused_graph, k=0.5, iterations=200)
+    nx.draw_networkx_nodes(focused_graph, pos, node_size=node_sizes, node_color=node_colors, alpha=0.7)
+    nx.draw_networkx_edges(focused_graph, pos, width=edge_widths, edge_color='gray', alpha=0.5)
+    nx.draw_networkx_labels(focused_graph, pos, font_size=10, font_family='sans-serif')
+    plt.title(title, fontsize=16)
+    plt.axis('off')
+    plt.tight_layout()
+    plt.savefig(output_filename, bbox_inches='tight')
+    plt.close()
+
+    return focused_graph, {node: node_cluster.get(node) for node in focused_graph.nodes()}
+
+# Visualize colored combined gender-focused network and get cluster information
+colored_combined_gender_focused_graph, colored_combined_gender_focused_clusters = visualize_combined_gender_focused_network_colored(
+    'network-hadza-titleAbs.json',
+    'hadza_gender_colored_network.png',
+    'Co-occurrences with "men" or "women" in Hadza Literature (Colored by Gender)',
+    gender_terms=["men", "women"]
+)
+
+# Get top 2 terms per cluster for the colored combined focused network
+def get_top_n_terms_per_cluster_from_graph(graph, clusters, n=2):
+    cluster_term_occurrences = defaultdict(lambda: defaultdict(int))
+    for node in graph.nodes(data=True):
+        term = node[0]
+        attributes = node[1]
+        occurrences = attributes.get('weights', {}).get('Occurrences', 0)
+        cluster_id = clusters.get(term)
+        if cluster_id is not None:
+            cluster_term_occurrences[cluster_id][term] = occurrences
+
+    top_n_per_cluster = {}
+    for cluster_id, term_counts in cluster_term_occurrences.items():
+        sorted_terms = sorted(term_counts.items(), key=lambda item: item[1], reverse=True)
+        top_n = sorted_terms[:n]
+        top_n_per_cluster[cluster_id] = top_n
+    return top_n_per_cluster
+
+top_colored_combined_gender_focused_cluster_terms = get_top_n_terms_per_cluster_from_graph(
+    colored_combined_gender_focused_graph,
+    colored_combined_gender_focused_clusters
+)
+
+if top_colored_combined_gender_focused_cluster_terms:
+    print("\nTop 2 Terms per Cluster in Hadza Literature (Colored by Gender):")
+    for cluster, top_terms in top_colored_combined_gender_focused_cluster_terms.items():
+        print(f"Cluster {cluster}: {', '.join([f'{term} ({count})' for term, count in top_terms])}")
+
+print("\nCombined gender-focused network visualization colored by gender saved as hadza_gender_colored_network.png")
+```
+

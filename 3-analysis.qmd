@@ -1,0 +1,417 @@
+---
+title: "3-analysis"
+format: html
+---
+
+## GET DATA
+
+Read depersonalized, cleaned, and transformed data.
+
+```{r getData}
+hadza <- read.csv("data3-hadza-analysis.csv", stringsAsFactors = TRUE)
+```
+
+## DATA DISTRIBUTION
+
+```{r diffTests}
+#tests for difference
+t.test(hadza$totalHypoplasia ~ hadza$sex)
+kruskal.test(hadza$totalHypoplasia ~ hadza$sex)
+
+t.test(hadza$hypoplasiaRate ~ hadza$sex)
+kruskal.test(hadza$hypoplasiaRate ~ hadza$sex)
+
+#tests
+median(hadza$hypoplasiaRate)
+mean(hadza$hypoplasiaRate)
+var(hadza$hypoplasiaRate)
+aggregate(hypoplasiaRate ~ sex, hadza, function(x) c(Var = var(x)))
+
+#var
+car::leveneTest(hypoplasiaRate ~ sex, data=hadza)
+```
+
+
+```{r normalDistro}
+library(ggplot2)
+# Histogram with density plot
+sa = ggplot(hadza, aes(x=hypoplasiaRate)) +
+  geom_histogram(aes(y=..density..),colour="black", fill="white", bins=5)+
+  geom_vline(aes(xintercept=mean(hypoplasiaRate)),
+            color="black", linetype="dashed", linewidth=1) +
+  geom_density(alpha=.2) +
+  annotate("text", x = mean(hadza$hypoplasiaRate), y = 0.55, 
+           label = round(mean(hadza$hypoplasiaRate), 2), 
+           color = "black", size = 4, hjust = -0.1) +
+  theme_classic()
+
+library(dplyr)
+# Histogram with density plot, by sex
+means = hadza |>
+    group_by(sex) |>
+    dplyr::summarize(Mean = mean(hypoplasiaRate, na.rm=TRUE))
+
+sb = ggplot(hadza, aes(x = hypoplasiaRate, color = sex)) +
+  geom_histogram(aes(y = ..density..), fill = "white", position = "dodge", bins = 5) +
+  geom_vline(data = means, aes(xintercept = Mean, color = sex), linetype = "dashed", linewidth = 1, show.legend = FALSE) +
+  geom_density(alpha = 0.2, show.legend = FALSE) +
+  geom_text(data = means, aes(x = Mean, y = .6, label = round(Mean, 2), color = sex),
+            position = position_jitter(width = .15, height = .15), show.legend = FALSE, size = 4) + 
+  scale_color_viridis_d(end =.6) +
+  theme_classic()
+
+library(cowplot)
+plot_grid(sa, sb, nrow = 2,labels = c("A", "B"), rel_heights = c(1, 1))
+ggsave('sfig1.tiff', plot = last_plot())
+#rm(sa,sb)
+
+#time series, regression by age
+a = ggplot(hadza, aes(x = yob, y = hypoplasiaRate)) +
+    stat_smooth(method = "lm", show.legend = FALSE) +
+    geom_point(size=2) +
+    scale_x_continuous(breaks=seq(1925,2000,5))+
+    theme_classic() +
+    theme(legend.position = "top",
+          legend.title = element_blank(),
+          legend.text = element_text(color="black", size=14),
+          axis.text.x = element_text(color = "black", size = 14),
+          axis.text.y = element_text(color = "black", size = 14)) +
+    xlab("") + ylab("Hypoplasia Rate")
+
+#time series, regression by age and sex
+b = ggplot(hadza, aes(x = yob, y = hypoplasiaRate,fill= sex, colour=sex, shape=sex)) +
+    stat_smooth(method = "lm", show.legend = FALSE) +
+    geom_point(size=2) +
+    scale_x_continuous(breaks=seq(1925,2000,5))+
+    scale_color_viridis_d(begin= 0.15, end=0.65)+
+    scale_fill_viridis_d(begin= 0.15, end=0.65) +
+    theme_classic() +
+    theme(legend.position = "top",
+          legend.title = element_blank(),
+          legend.text = element_text(color="black", size=14),
+          axis.text.x = element_text(color = "black", size = 14),
+          axis.text.y = element_text(color = "black", size = 14)) +
+    xlab("Year of Birth") + ylab("Hypoplasia Rate")
+
+plot_grid(a, b, nrow = 2,labels = c("A", "B"), rel_heights = c(1, 1.25))
+ggsave('fig1-timeSeries.tiff', plot = last_plot())
+```
+
+
+```{r tidy1}
+rm(a,b, sa, sb, means)
+```
+
+
+## LINEAR MIXED EFFECTS MODEL
+
+```{r llm}
+library(lme4)
+
+# calculate offset
+hadza$tooth_offset <- log(hadza$totalTeeth / 12) 
+
+#llm centered on mean year
+hadza$yob_centered <- hadza$yob - mean(hadza$yob)
+lmer_model_centered <- lme4::lmer(hypoplasiaRate ~ yob_centered * sex + offset(tooth_offset) + (1 | id), data = hadza)
+lmer_model_centered_test <- lmerTest::lmer(hypoplasiaRate ~ yob_centered * sex + offset(tooth_offset) + (1 | id), data = hadza)
+summary(lmer_model_centered_test)
+
+#llm centered on 1970
+hadza$yob_centered_1970 <- hadza$yob - 1970
+lmer_model_1970 <- lme4::lmer(hypoplasiaRate ~ yob_centered_1970 * sex + offset(tooth_offset) + (1 | id), data = hadza)
+lmer_model_1970_test <- lmerTest::lmer(hypoplasiaRate ~ yob_centered_1970 * sex + offset(tooth_offset) + (1 | id), data = hadza)
+summary(lmer_model_1970_test)
+
+#llm centered on 1975
+hadza$yob_centered_1975 <- hadza$yob - 1975
+lmer_model_1975 <- lme4::lmer(hypoplasiaRate ~ yob_centered_1975 * sex + offset(tooth_offset) + (1 | id), data = hadza)
+lmer_model_1975_test <- lmerTest::lmer(hypoplasiaRate ~ yob_centered_1975 * sex + offset(tooth_offset) + (1 | id), data = hadza)
+summary(lmer_model_1975_test)
+
+#extract effect sizes
+library(effectsize)
+effectsize(lmer_model_1975_test)
+
+#plot interaction, significant term
+library(effects)
+eff <- effect("yob_centered_1975:sex", lmer_model_1975)
+tiff('fig2-llm-effects.tiff', units= 'in', height = 4, width = 8, res=300)
+plot(eff,
+     xlab = "Year of Birth",
+     ylab = "Predicted Hypoplasia Rate",
+     main = "")
+dev.off()
+
+#get marginal(fixed factors) and conditional (random and fixed) R2
+library(MuMIn)
+r.squaredGLMM(lmer_model_1970) 
+```
+
+```{r tidy2}
+rm(eff, lmer_model_1970, lmer_model_1970_test, lmer_model_centered, lmer_model_centered_test, lmer_model_1975_test)
+```
+
+
+### MODEL DIAGNOSTICS
+Perform thorough residual analysis on the LMM to ensure that it's providing a good fit.
+```{r modelDiag}
+#residual plot
+plot(resid(lmer_model_1975) ~ fitted(lmer_model_1975))
+
+#qq plot of residuals with CI
+library(car)
+car::qqPlot(resid(lmer_model_1975))
+hadza[c(34, 40), ] #id outliers
+
+#add ids to residuals to replace rows
+re_df <- as.data.frame(ranef(lmer_model_1975)$id)
+re_df$id <- rownames(re_df) 
+
+# random effects plot
+library(lattice)
+dotplot(ranef(lmer_model_1975, condVar = TRUE))
+
+#histogram
+ggplot(re_df, aes(x = `(Intercept)`)) +
+  geom_histogram(bins = 20, fill = "lightblue", color = "black") +
+  labs(title = "Distribution of Random Effects (Intercept)", x = "Random Effect Value", y = "Frequency") +
+  theme_classic()
+#density
+ggplot(re_df, aes(x = `(Intercept)`)) +
+  geom_density(fill = "lightblue", color = "black") +
+  labs(title = "Density Plot of Random Effects (Intercept)", x = "Random Effect Value", y = "Density") +
+  theme_classic()
+
+#get outlier to revise boxplot 
+outlier_value <- boxplot.stats(re_df$`(Intercept)`)$out
+outlier_row <- which(re_df$`(Intercept)` == outlier_value)
+outlier_id <- rownames(re_df)[outlier_row] 
+
+ggplot(re_df, aes(y = `(Intercept)`)) +
+  geom_boxplot(fill = "lightblue", color = "black", outlier.colour = 'lightcoral', outlier.shape = 8, outlier.size = 3) +
+  labs(title = "Boxplot of Random Effects (Intercept)", y = "Random Effect Value") +
+  theme_classic() +
+  geom_text(data = re_df[outlier_row, ], aes(x = 1, y = `(Intercept)`, label = outlier_id), nudge_y = 0.02, nudge_x = -0.975)
+
+# random effects plot
+re_df <- as.data.frame(ranef(lmer_model_1975)$id) #convert raneff to dataframe
+re_df$id <- rownames(re_df) # Add ID as a column to dataframe
+merged_df <- merge(re_df, hadza, by = "id") #merge with hadza on id
+
+ggplot(merged_df, aes(x = `(Intercept)`, color = sex)) +
+  geom_density() +
+  labs(title = "Density Plot of Random Effects (Intercept) by Sex",
+       x = "Random Effect Value", y = "Density") +
+  theme_classic()
+```
+
+```{r tidy3}
+rm(outlier_id, outlier_row, outlier_value, merged_df, re_df)
+```
+
+
+### Sensitivity testing for outliers
+
+```{r sensitivity34}
+summary_model <- summary(lmer_model_1975)
+coef_model <- summary_model$coefficients
+ci_lower <- coef_model[, "Estimate"] - 1.96 * coef_model[, "Std. Error"]
+ci_upper <- coef_model[, "Estimate"] + 1.96 * coef_model[, "Std. Error"]
+ci_model <- cbind(coef_model, ci_lower, ci_upper)
+
+# Model without outlier in row 34 (ind 450)
+hadza_no_450 <- hadza[hadza$id != "450", ]
+lmer_model_no_450 <- lme4::lmer(hypoplasiaRate ~ yob * sex + offset(tooth_offset) + (1 | id), data = hadza_no_450)
+summary_model_no_450 <- summary(lmer_model_no_450)
+#summary table for sensitivity analysis
+coef_model_no_450 <- summary_model_no_450$coefficients
+ci_lower_no_450 <- coef_model_no_450[, "Estimate"] - 1.96 * coef_model_no_450[, "Std. Error"]
+ci_upper_no_450 <- coef_model_no_450[, "Estimate"] + 1.96 * coef_model_no_450[, "Std. Error"]
+ci_model_no_450 <- cbind(coef_model_no_450, ci_lower_no_450, ci_upper_no_450)
+
+
+# Model without outlier in row 40 (ind 16)
+hadza_no_16 <- hadza[hadza$id != "16", ]
+lmer_model_no_16 <- lme4::lmer(hypoplasiaRate ~ yob * sex + offset(tooth_offset) + (1 | id), data = hadza_no_16)
+summary_model_no_16 <- summary(lmer_model_no_16)
+#summary table for sensitivity analysis
+coef_model_no_16 <- summary_model_no_16$coefficients
+ci_lower_no_16 <- coef_model_no_16[, "Estimate"] - 1.96 * coef_model_no_16[, "Std. Error"]
+ci_upper_no_16 <- coef_model_no_16[, "Estimate"] + 1.96 * coef_model_no_16[, "Std. Error"]
+ci_model_no_16 <- cbind(coef_model_no_16, ci_lower_no_16, ci_upper_no_16)
+
+
+# Model without outlier in row 16 (ind 861)
+hadza_no_861 <- hadza[hadza$id != "861", ]
+lmer_model_no_861 <- lme4::lmer(hypoplasiaRate ~ yob * sex + offset(tooth_offset) + (1 | id), data = hadza_no_861)
+summary_model_no_861 <- summary(lmer_model_no_861)
+#summary table for sensitivity analysis
+coef_model_no_861 <- summary_model_no_861$coefficients
+ci_lower_no_861 <- coef_model_no_861[, "Estimate"] - 1.96 * coef_model_no_861[, "Std. Error"]
+ci_upper_no_861 <- coef_model_no_861[, "Estimate"] + 1.96 * coef_model_no_861[, "Std. Error"]
+ci_model_no_861 <- cbind(coef_model_no_861, ci_lower_no_861, ci_upper_no_861)
+
+
+# for results table
+ci_model
+ci_model_no_16
+ci_model_no_450
+ci_model_no_861
+
+#table of outliers
+outlier_data <- hadza[c(16, 34, 40), ]
+```
+
+```{r tidy4}
+rm(ci_model, ci_model_no_16, ci_model_no_34, ci_model_no_40, coef_model, coef_model_no_16, coef_model_no_34, coef_model_no_40, hadza_no_16, hadza_no_34, hadza_no_40, lmer_model_no_16, lmer_model_no_34, lmer_model_no_40, summary_model, summary_model_no_16, summary_model_no_34, summary_model_no_40, ci_lower, ci_lower_no_16, ci_lower_no_34, ci_lower_no_40, ci_upper, ci_upper_no_16,ci_upper_no_34, ci_upper_no_40)
+```
+
+
+## BRMS
+Issues arose and brms failed to converge so priors were used.
+
+Tried narrow, wide, and wider half normal and each has 0 variance but all other values were good. Suggests that randome effect isn't needed.
+
+Priors suggest zero variance from that effect. Compare results
+
+```{r lmerNoRandom}
+lmer_model_1975 <- lme4::lmer(hypoplasiaRate ~ yob_centered_1975 * sex + offset(tooth_offset) + (1 | id), data = hadza)
+summary(lmer_model_1975)
+
+lmer_model_1975_fixed <- lm(hypoplasiaRate ~ yob_centered_1975 * sex + offset(tooth_offset), data = hadza)
+summary(lmer_model_1975_fixed)
+
+anova(lmer_model_1975, lmer_model_1975_fixed)
+```
+
+```{r tidy5}
+rm(lmer_model_1975)
+```
+
+
+## New BRMS without random
+
+BRMS defaults to half cauchy with location 0, scale 2.5 by default and that won't work b/c it will seriously shift peak to the right when the limit is 2.5 and there are no long tails. 
+
+ half-Cauchy with a scale of 2.5 has a substantial tail extending beyond 2.5. This means the prior believes that residual standard deviations in that range (or even higher) are reasonably plausible before seeing the data.
+If your data predominantly fall between 0 and 3, a residual standard deviation much larger than that might not be well-supported by the data itself.
+
+The fact that your model seems to be overestimating the standard deviation in the posterior predictive checks could potentially be related to this default half-Cauchy prior on sigma. While it's intended to be weakly informative, its influence can still be noticeable, especially with a smaller dataset.
+
+More Informative Prior: If you have prior knowledge about the likely range of the residual standard deviation, you could incorporate that into a more informative prior.
+
+Therefore, your intuition that the default scale of the half-Cauchy is likely contributing to the overestimation of the standard deviation in your posterior predictions is very likely correct. The prior is "pulling" the posterior of sigma towards higher values than what the data strongly suggest.
+
+
+```{r brmsFinalModel}
+library(brms)
+
+# Get lmer results to inform fixed effect priors
+lmer_summary <- summary(lmer_model_1975_fixed)
+lmer_coef <- lmer_summary$coefficients
+lmer_sd <- lmer_coef[, "Std. Error"]
+
+# Extract prior parameters for fixed effects (using the CENTERED names)
+intercept_mean <- lmer_coef["(Intercept)", "Estimate"]
+intercept_sd <- lmer_sd["(Intercept)"]
+yob_centered_mean <- lmer_coef["yob_centered_1975", "Estimate"]
+yob_centered_sd <- lmer_sd["yob_centered_1975"]
+sexMale_mean <- lmer_coef["sexMale", "Estimate"]
+sexMale_sd <- lmer_sd["sexMale"]
+yob_sexMale_mean <- lmer_coef["yob_centered_1975:sexMale", "Estimate"]
+yob_sexMale_sd <- lmer_sd["yob_centered_1975:sexMale"]
+
+# Define priors for FIXED EFFECTS ONLY
+prior_list_fixed <- c(
+  prior(normal(intercept_mean, intercept_sd), class = "Intercept"),
+  prior(normal(yob_centered_mean, yob_centered_sd), class = "b", coef = "yob_centered_1975"),
+  prior(normal(sexMale_mean, sexMale_sd), class = "b", coef = "sexMale"),
+  prior(normal(yob_sexMale_mean, yob_sexMale_sd), class = "b", coef = "yob_centered_1975:sexMale"),
+  prior(normal(0, 0.2), class = "sigma", lb = 0)
+)
+
+# Define Stan variables for lmer-informed priors
+stanvars_list <- stanvar(intercept_mean, name = "intercept_mean") +
+  stanvar(intercept_sd, name = "intercept_sd") +
+  stanvar(yob_centered_mean, name = "yob_centered_mean") +
+  stanvar(yob_centered_sd, name = "yob_centered_sd") +
+  stanvar(sexMale_mean, name = "sexMale_mean") +
+  stanvar(sexMale_sd, name = "sexMale_sd") +
+  stanvar(yob_sexMale_mean, name = "yob_sexMale_mean") +
+  stanvar(yob_sexMale_sd, name = "yob_sexMale_sd")
+
+# brms model with increased treedepth
+brms_model <- brm(
+  hypoplasiaRate ~ yob_centered_1975 * sex + offset(tooth_offset), 
+  data = hadza,
+  prior = prior_list_fixed,
+  stanvars = stanvars_list,
+  control = list(adapt_delta = 0.9, max_treedepth = 12)
+)
+
+summary(brms_model)
+
+posterior_summary(brms_model, variables = "sigma")
+```
+
+
+```{r finalDx}
+library(brms)
+library(bayesplot)
+
+y <- hadza$hypoplasiaRate 
+
+# 1. Posterior Predictive Checks
+# Generate predicted data from the posterior distribution
+
+y_rep <- posterior_predict(brms_model, draws = 500) 
+
+# Create overlayed density plot of observed data vs. predicted data
+ppc_dens_overlay(y, y_rep[1:100, ]) # subset predictions for clean visualization
+
+# Create a histogram of observed data overlaid with histograms of predicted data
+ppc_hist(y, y_rep[1:10, ]) # subset predictions for clean visualization
+
+# Create a PPC QQ-plot using ppc_scatter_avg
+ppc_scatter_avg(y, y_rep)
+
+# You can also look at the mean of the observed vs. predicted data
+ppc_stat(y, y_rep, stat = "mean")
+# And the standard deviation
+ppc_stat(y, y_rep, stat = "sd")
+
+
+# 2. Model Diagnostics
+library(bayesplot)
+# Trace plots for specific parameters
+mcmc_trace(brms_model, pars = c("b_Intercept", "b_yob_centered_1975", "b_sexMale", "b_yob_centered_1975:sexMale", "sigma"))
+
+# ACF plots for specific parameters
+mcmc_acf(brms_model, pars = c("b_Intercept", "b_yob_centered_1975", "b_sexMale", "b_yob_centered_1975:sexMale", "sigma"))
+
+# Pairs plot 
+pairs(brms_model) #visualize joint posterior distributions and correlations
+
+#model summary for Rhat values and Effective Sample Sizes 
+summary(brms_model)
+
+posterior_summary(brms_model)
+sd(hadza$hypoplasiaRate)
+```
+
+
+## Means 
+```{r means}
+hadza |>
+  mutate(birth_era = ifelse(yob < 1975, "Before 1975", "After 1975")) |>
+  group_by(birth_era) |>
+  summarise(mean_hypoplasia_rate = mean(hypoplasiaRate, na.rm = TRUE))
+
+
+hadza |>
+  mutate(birth_era = ifelse(yob < 1975, "Before 1975", "After 1975")) |>
+  group_by(birth_era, sex) |>
+  summarise(mean_hypoplasia_rate = mean(hypoplasiaRate, na.rm = TRUE))
+```
+

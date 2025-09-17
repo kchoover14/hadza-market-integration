@@ -1,0 +1,53 @@
+---
+title: "2-explore"
+format: html
+---
+
+## Libraries and Data
+
+Get data and create analytical set.
+
+```{r data}
+hadza <- read.csv("data2-hadza-depersonalized.csv", stringsAsFactors = TRUE)
+
+library(dplyr)
+#create string factor for biological sex
+hadza <- rename(hadza, sexn=sex)
+hadza$sex <- with(hadza, ifelse(sexn > 1, 'Female', 'Male'))
+
+#get year of birth using age when data were collected (year)
+#if year of birth is NA, replace value with yob2
+hadza$yob2 <- hadza$year - hadza$age
+hadza <- hadza |> mutate(yob = coalesce(yob,yob2))
+
+#create new variables for hypoplasia rate (total LEH/total teeth)
+hadza$totalTeeth <- rowSums(!is.na(hadza[6:17]))
+hadza$totalHypoplasia <-  rowSums(hadza[ , 6:17], na.rm=TRUE)
+hadza$hypoplasiaRate <- with(hadza, (totalHypoplasia/totalTeeth))
+hadza = subset(hadza, !is.na(hypoplasiaRate)) #remove individuals with no teeth
+
+#reduce variables in dataset
+hadza <- dplyr::select(hadza, id, age, yob, sex, sexn, totalHypoplasia, totalTeeth, hypoplasiaRate)
+
+#save for analysis
+write.csv(hadza, "data3-hadza-analysis.csv", row.names = FALSE, quote=FALSE)
+```
+
+## Descriptive statistics
+
+```{r descriptives}
+library(psych)
+hadzaDesc = dplyr::select(hadza, id, sex, age, yob, sex, totalHypoplasia, totalTeeth, hypoplasiaRate)
+
+#by sample
+descriptivesSample <- describe(hadzaDesc, na.rm = TRUE)
+write.csv(descriptivesSample, "results-descriptives.sample.csv", quote=FALSE, row.names = TRUE, na="")
+
+#by sex
+descriptivesSex <- describeBy(hadzaDesc, group="sex", na.rm = TRUE, mat=TRUE)
+write.csv(descriptivesSex, "results-descriptives.sex.csv", quote=FALSE, row.names = TRUE, na="")
+
+#tidy
+rm(list=ls())
+```
+

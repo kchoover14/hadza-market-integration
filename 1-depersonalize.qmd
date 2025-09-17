@@ -1,0 +1,46 @@
+---
+title: "Depersonalize and Clean Final Dataset"
+format: html
+---
+
+## Depersonalize Data
+
+Data are not shared because they contain personal identifying information. This script is shared to show the process of depersonalizing.
+
+The following errors were corrected:
+--Data entry error: Age for individual 424 was entered as 15 5 rather than 15.5, rendering the variable to character class.
+--Inclusion critiera: remove 3 individuals with too much tooth wear.
+--Filter adults: remove 8 individuals under the age of 18
+
+```{r getData}
+library(dplyr); library(janitor)
+
+#load raw data
+hadza_source <- read.csv("data1-hadza-orig.csv", sep=",", strip.white = TRUE, check.names = TRUE, stringsAsFactors = FALSE)
+
+#clean names
+hadza_source = clean_names(hadza_source)
+
+#clean age data
+hadza_source[hadza_source$id==424, "age"] <- 15.5
+hadza_source$age <- as.numeric(hadza_source$age)
+
+#inclusion criteria
+hadza_source <- hadza_source |> filter(id != "4")
+hadza_source <- hadza_source |> filter(id != "316")
+hadza_source <- hadza_source |> filter(id != "267")
+
+#filter adults
+hadza_source <- filter(hadza_source, age > 17)
+
+#sharing subset of data used to create final dataset
+hadza_source <- dplyr::select(hadza_source, id, year, yob, sex, age,
+        h_rxi1, h_rxi2, h_rxc, h_lxi1, h_lxi2, h_lxc,
+        h_rni1, h_lni1, h_rni2, h_lni2, h_rnc, h_lnc)
+
+write.csv(hadza_source, "data2-hadza-depersonalized.csv", quote=FALSE, row.names = FALSE)
+
+#tidy
+rm(list=ls())
+```
+
