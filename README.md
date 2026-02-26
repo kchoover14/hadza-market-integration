@@ -1,9 +1,35 @@
-# HadzaMarketIntegration
+## Hadza Childhood Health and Remote Market Integration
 
-This is a reposity for the paper 'Market integration improves traditional Hadza male childhood health with no effect on females'
+Linear enamel hypoplasia (LEH) -- permanent dental defects formed during early childhood -- were assessed in 81 bush-living Hadza hunter-gatherers of Tanzania to examine long-term trends in developmental stress across a 62-year birth cohort. A linear mixed-effects model and Bayesian confirmation (brms) identified a significant interaction between birth year and sex: male hypoplasia rates declined 71% after 1975 while female rates remained flat. The 1975 turning point coincides with the onset of remote market integration -- researchers and tourists bringing goods and currency to bush camps -- and a bibliometric analysis of published Hadza research reveals decades of external bias toward men's activities that may have driven the disparity.
 
-J. Colette Berbesque and Kara C. Hoover
+## Published Paper
 
-While market integration sometimes benefits one sex or disadvantages the other, its impact on hunter-gatherer populations with subtle pre-existing sex-based dynamics remains understudied. We examined linear enamel hypoplasias, a biomarker of developmental stress in teeth, using time series analysis spanning 40 years in a sample of 81 bush-living Hadza. Results show that Hadza men born after the mid-1970s) experienced less early childhood stress than women and older generations. Few of the traditional explanations for health disparity explained the result, which is counter to most archaeological and contemporary studies of populations in transition. The turning point for men’s childhood health coincided with an increasing supply of tourist goods and currency in the bush, remote market integration. Early and remote integration into the market economy may have had subtle health impacts on health not previously uncovered due to methodological differences and approaches. Remote market economy to bush-living Hadza appears to have disproportionately benefitted men's early childhood health and may be tied to an external signal of men’s activities having higher value that exacerbated existing sex-based dynamics. The broader implications are that external forces associated with market integration can favor males over females, even in hunter-gatherer societies with traditional sex-based divisions of labor.
+Berbesque, J. C., & Hoover, K. C. (2025). Market Integration Improves Traditional Hadza Male Childhood Health with no Effect on Females. *The Journal of Development Studies*, 1--18. DOI: [10.1080/00220388.2025.2555188](https://doi.org/10.1080/00220388.2025.2555188)
 
-The repository contains a preprint, data files, and scripts.
+## Repository Contents
+
+This repo contains two sets of files: the original data and scripts associated with the published paper, and revised files (prefixed `revised-`) produced for the portfolio reanalysis.
+
+- **Original files:** `data2-hadza-depersonalized.csv`, `data3-hadza-analysis.csv`, `1-depersonalize.qmd`, `2-explore.qmd`, `3-analysis.qmd`, `4-bibmet.qmd` 
+- **Revised files:** `revised-analysis.R`, `revised-bibmet.py`, `revised-fig1.png`, `revised-fig2.png`, `revised-fig3.png`, `revised-fig4-women-network.png`, `revised-fig5-men-network.png` 
+
+## Portfolio Page
+
+The [portfolio page](https://kchoover14.github.io/hadza-market-integration) includes a full project narrative, key findings, and figures.
+
+## Tools & Technologies
+
+**Languages:** R | Python
+
+**Tools:** RStudio | Jupyter
+
+**Packages:** lme4 | lmerTest | effectsize | effects | MuMIn | brms | bayesplot | ggplot2 | cowplot | dplyr | psych | car | lattice | bibliometrix | readxl | janitor | NetworkX | matplotlib
+
+## Expertise
+
+Applying bioarchaeological methods to living populations to reconstruct long-term health histories; triangulating findings across frequentist, Bayesian, and bibliometric approaches; ethical data stewardship in research with indigenous communities.
+
+## License
+
+- Code and scripts are licensed under the [MIT License](LICENSE).
+- Data, figures, and written content © Kara C. Hoover, licensed under [CC BY-NC-ND 4.0](https://creativecommons.org/licenses/by-nc-nd/4.0/).
