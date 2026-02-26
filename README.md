@@ -1,17 +1,9 @@
 # HadzaMarketIntegration
 
-This is a reposity for the paper 'Market integration in a transitional hunter-gatherer population benefits men, not women'
+This is a reposity for the paper 'Market integration improves traditional Hadza male childhood health with no effect on females'
 
 J. Colette Berbesque and Kara C. Hoover
 
-Market integration in a transitional hunter-gatherer population benefits men, not women
-Economic and subsistence transitions create wealth and health disparity. Sometimes transitions benefit one sex (usually male) or disadvantage the other (usually female). Hunter-gatherer societies with social hierarchies beyond a gender-based division of labor follow this pattern when groups make the transition from hunting-gathering to market economies. We applied non-invasive methods for assessing health during early childhood (ages 1-5) and found men’s health improves in response to market integration and women’s does not change. The health biomarker used is linear enamel hypoplasias, specifically the presence of missing enamel in permanent teeth which indicate stress during growth and development. We used a time series analysis (date of birth) relative to the frequency of teeth having a hypoplastic marker to test whether gender-based health differences occurred over time. Starting about 40 years ago, younger generations of Hadza men experienced less childhood stress than women and older generations. The transition to a market economy in bush-living Hadza has benefitted men’s health, but not women’s health. The broader implications are that the sex-based division of labor in hunting-gatherer societies is exacerbated by external forces favouring males over females.
+While market integration sometimes benefits one sex or disadvantages the other, its impact on hunter-gatherer populations with subtle pre-existing sex-based dynamics remains understudied. We examined linear enamel hypoplasias, a biomarker of developmental stress in teeth, using time series analysis spanning 40 years in a sample of 81 bush-living Hadza. Results show that Hadza men born after the mid-1970s) experienced less early childhood stress than women and older generations. Few of the traditional explanations for health disparity explained the result, which is counter to most archaeological and contemporary studies of populations in transition. The turning point for men’s childhood health coincided with an increasing supply of tourist goods and currency in the bush, remote market integration. Early and remote integration into the market economy may have had subtle health impacts on health not previously uncovered due to methodological differences and approaches. Remote market economy to bush-living Hadza appears to have disproportionately benefitted men's early childhood health and may be tied to an external signal of men’s activities having higher value that exacerbated existing sex-based dynamics. The broader implications are that external forces associated with market integration can favor males over females, even in hunter-gatherer societies with traditional sex-based divisions of labor.
 
-
-RScript0: included for transparency in data transformation taking place with initial dataset that contains personal identifying information (and is not shared). Produces 1-data-hadza.stripped.csv
-
-RScript1: contains code for cleaning data (tidy names, recoding scores from numbers to strings to be used as factors, creating analytical variables, trimming to final dataset). Uses 1-data-hadza.stripped.csv and produces 2-data-hadza.cleaned.csv
-
-RScript2: contains code for testing against normal distribution, generating descriptive statistics. Uses 2-data-hadza.cleaned.csv 
-
-RScript3: contains code for plots and analysis. Uses 2-data-hadza.cleaned.csv 
+The repository contains a preprint, data files, and scripts.
