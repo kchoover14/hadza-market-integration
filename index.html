@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.23">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Kara C. Hoover">
+
+<title>Market Integration Improves Traditional Hadza Male Childhood Health with no Effect on Females</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="hadza-market-integration_files/libs/clipboard/clipboard.min.js"></script>
+<script src="hadza-market-integration_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="hadza-market-integration_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="hadza-market-integration_files/libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="hadza-market-integration_files/libs/quarto-html/popper.min.js"></script>
+<script src="hadza-market-integration_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="hadza-market-integration_files/libs/quarto-html/anchor.min.js"></script>
+<link href="hadza-market-integration_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="hadza-market-integration_files/libs/quarto-html/quarto-syntax-highlighting-076ecbd647e1f0418c5051713cd9b730.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="hadza-market-integration_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="hadza-market-integration_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="hadza-market-integration_files/libs/bootstrap/bootstrap-fdc35ccebf6ef883c9ad23e25989f106.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="eggplant quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#executive-summary" id="toc-executive-summary" class="nav-link active" data-scroll-target="#executive-summary">Executive Summary</a></li>
+  <li><a href="#research-question" id="toc-research-question" class="nav-link" data-scroll-target="#research-question">Research Question</a></li>
+  <li><a href="#research-answers" id="toc-research-answers" class="nav-link" data-scroll-target="#research-answers">Research Answers</a>
+  <ul class="collapse">
+  <li><a href="#the-sample-and-the-biomarker" id="toc-the-sample-and-the-biomarker" class="nav-link" data-scroll-target="#the-sample-and-the-biomarker">The sample and the biomarker</a></li>
+  <li><a href="#childhood-health-trends-across-62-years" id="toc-childhood-health-trends-across-62-years" class="nav-link" data-scroll-target="#childhood-health-trends-across-62-years">Childhood health trends across 62 years</a></li>
+  <li><a href="#linear-mixed-effects-model" id="toc-linear-mixed-effects-model" class="nav-link" data-scroll-target="#linear-mixed-effects-model">Linear mixed-effects model</a></li>
+  <li><a href="#bayesian-confirmation" id="toc-bayesian-confirmation" class="nav-link" data-scroll-target="#bayesian-confirmation">Bayesian confirmation</a></li>
+  <li><a href="#what-explains-the-turning-point" id="toc-what-explains-the-turning-point" class="nav-link" data-scroll-target="#what-explains-the-turning-point">What explains the turning point?</a></li>
+  <li><a href="#research-bias-in-the-hadza-literature" id="toc-research-bias-in-the-hadza-literature" class="nav-link" data-scroll-target="#research-bias-in-the-hadza-literature">Research bias in the Hadza literature</a></li>
+  </ul></li>
+  <li><a href="#next-steps" id="toc-next-steps" class="nav-link" data-scroll-target="#next-steps">Next Steps</a></li>
+  <li><a href="#study-design" id="toc-study-design" class="nav-link" data-scroll-target="#study-design">Study Design</a></li>
+  <li><a href="#project-resources" id="toc-project-resources" class="nav-link" data-scroll-target="#project-resources">Project Resources</a></li>
+  <li><a href="#tools-technologies" id="toc-tools-technologies" class="nav-link" data-scroll-target="#tools-technologies">Tools &amp; Technologies</a></li>
+  <li><a href="#expertise" id="toc-expertise" class="nav-link" data-scroll-target="#expertise">Expertise</a></li>
+  </ul>
+</nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Market Integration Improves Traditional Hadza Male Childhood Health with no Effect on Females</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">hunter-gatherers</div>
+    <div class="quarto-category">developmental stress</div>
+    <div class="quarto-category">market integration</div>
+    <div class="quarto-category">gender health disparities</div>
+    <div class="quarto-category">time series</div>
+    <div class="quarto-category">linear mixed-effects model</div>
+    <div class="quarto-category">Bayesian analysis</div>
+    <div class="quarto-category">bibliometrics</div>
+    <div class="quarto-category">network analysis</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Kara C. Hoover </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">October 2025</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="executive-summary" class="level2">
+<h2 class="anchored" data-anchor-id="executive-summary">Executive Summary</h2>
+<p><strong>Problem:</strong> Understanding how market integration affects health in hunter-gatherer populations requires long-term data that human biology methods alone cannot provide. Contemporary studies of living populations are constrained by researcher lifespans and cannot access developmental health records from decades past. Meanwhile, bioarchaeological methods that can reach across time have not been applied to living populations with rich longitudinal ethnographic data, leaving a methodological gap in our understanding of how economic transitions shape health.</p>
+<p><strong>Approach:</strong> This study applied a bioarchaeological technique – linear enamel hypoplasia (LEH) assessment – to a living population for the first time, using dental casts of the anterior maxillary dentition collected from 81 bush-living Hadza hunter-gatherers of Tanzania. LEH defects are permanent, indelible records of physiological stress during tooth development (4.5 months to 5.5 years of age), allowing retrospective analysis of early childhood health across a 62-year birth cohort spanning 1929 to 1991. Time series visualization guided hypothesis generation, which was then tested with a linear mixed-effects model (LMM) and confirmed with Bayesian analysis (brms). A bibliometric analysis of published Hadza research provided contextual evidence for the mechanisms driving the observed patterns.</p>
+<p><strong>Insights:</strong> Male childhood health improved significantly after the mid-1970s – a turning point that coincides with the arrival of researchers and tourists bringing goods and currency to remote bush camps, initiating a form of remote market integration not previously studied. Female childhood health remained flat across the entire observation period. The significant interaction between birth year and sex (beta = -0.04, p = 0.02) was robust to outlier removal and confirmed by Bayesian analysis. Bibliometric analysis revealed that published Hadza research has historically prioritized men’s roles and activities, and the tourism industry reinforces this external valuation of male labor – a pattern that may have translated into differential resource access benefitting male children.</p>
+<p><strong>Significance:</strong> Market integration research in hunter-gatherer populations has focused almost exclusively on the transition to sedentism and village life. This study demonstrates that health impacts from market forces appear even in remote populations with no direct market access, and that the effects are gendered in ways that are not predicted by traditional explanations (female neglect, differential medical access, or direct parental preferencing). The methodological contribution – applying LEH to a living population – opens a new avenue for longitudinal health research in groups with existing ethnographic records.</p>
+<p><strong>Key Findings</strong></p>
+<ul>
+<li>Male hypoplasia rates declined 71% after 1975 (from 1.13 to 0.33 defects per tooth); female rates declined only 23% (from 0.95 to 0.73), with no statistically significant trend over time.</li>
+<li>A linear mixed-effects model confirmed a significant birth year by sex interaction (beta = -0.04, SE = 0.02, p = 0.02), robust across three outlier sensitivity analyses.</li>
+<li>Bayesian confirmation (brms) yielded a consistent posterior mean for the interaction (-0.04, 95% CI: -0.06 to -0.02), with all Rhat values at 1 indicating good convergence.</li>
+<li>The 1975 turning point coincides with increased researcher and tourist activity in bush camps, consistent with the onset of remote market integration.</li>
+<li>Bibliometric analysis showed Hadza men have been the primary research focus for decades, with tourism reinforcing external signals that men’s activities have higher economic value – a pattern that may have indirectly shaped childhood health trajectories.</li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Berbesque, J. C., &amp; Hoover, K. C. (2025). Market Integration Improves Traditional Hadza Male Childhood Health with no Effect on Females. <em>The Journal of Development Studies</em>, 1–18. DOI: <a href="https://doi.org/10.1080/00220388.2025.2555188">10.1080/00220388.2025.2555188</a></p>
+</div>
+</div>
+<hr>
+</section>
+<section id="research-question" class="level2">
+<h2 class="anchored" data-anchor-id="research-question">Research Question</h2>
+<p>Can a bioarchaeological method – linear enamel hypoplasia assessment – be applied to a living population to extend the temporal window for studying childhood developmental stress, and what do long-term health trends reveal about the effects of remote market integration on the Hadza?</p>
+<hr>
+</section>
+<section id="research-answers" class="level2">
+<h2 class="anchored" data-anchor-id="research-answers">Research Answers</h2>
+<section id="the-sample-and-the-biomarker" class="level3">
+<h3 class="anchored" data-anchor-id="the-sample-and-the-biomarker">The sample and the biomarker</h3>
+<p>The Hadza are a small-scale hunter-gatherer society living around Lake Eyasi in northern Tanzania. Roughly 150 individuals maintain traditional foraging lifestyles in remote mobile bush camps; the remaining 85% live in sedentary villages with varying degrees of market integration. Data were collected in 2007 and 2009 from the 81 adults (33 men, 48 women) in remote camps who obtained approximately 90% of their daily calories from foraging.</p>
+<p>Linear enamel hypoplasias (LEH) are permanent horizontal grooves or pits in dental enamel that form when physiological stress disrupts tooth development. Because the anterior maxillary teeth (central incisors, lateral incisors, canines) develop between 4.5 months and 5.5 years of age, defect counts on these teeth provide a retrospective record of early childhood health. A hypoplasia rate was calculated as total defects divided by total teeth observed, standardized using a tooth offset (log[totalTeeth/12]) to account for variation in teeth available.</p>
+</section>
+<section id="childhood-health-trends-across-62-years" class="level3">
+<h3 class="anchored" data-anchor-id="childhood-health-trends-across-62-years">Childhood health trends across 62 years</h3>
+<p><strong>Figure 1. Hypoplasia rate by birth year. (A) All individuals with linear regression and 95% confidence interval. (B) By sex with linear regression and 95% confidence intervals.</strong></p>
+<p><img src="revised-fig1.png" class="img-fluid"></p>
+<p><strong>Interpretation:</strong> The full sample shows a stable hypoplasia rate across the birth cohort, averaging approximately one defect per tooth (Figure 1A). When the data are disaggregated by sex (Figure 1B), a divergence emerges: female rates remain flat while male rates decline steadily, crossing the female line around 1968 and stabilizing below 0.5 after 1975. The pattern is not visible in the aggregate view, underscoring the importance of sex-disaggregated analysis.</p>
+</section>
+<section id="linear-mixed-effects-model" class="level3">
+<h3 class="anchored" data-anchor-id="linear-mixed-effects-model">Linear mixed-effects model</h3>
+<p>The LMM modeled hypoplasia rate as a function of birth year (centered at 1975) and sex, with a random intercept for individuals and a tooth offset to standardize for varying numbers of teeth observed. Significance was tested with lmerTest; effect sizes were estimated with the effectsize package.</p>
+<p><strong>Figure 2. Predicted hypoplasia rates by birth year and sex from the linear mixed-effects model.</strong></p>
+<p><img src="revised-fig2.png" class="img-fluid"></p>
+<p><strong>Interpretation:</strong> The model confirmed a significant interaction between birth year and sex (beta = -0.04, SE = 0.02, p = 0.02). The estimated hypoplasia rate for females at 1975 (the intercept) was 1.22; the estimated male rate was 0.95. The negative interaction coefficient indicates that male rates declined significantly faster over time than female rates. The conditional R-squared was high (0.84), indicating good overall model fit when random effects are included; the marginal R-squared was lower (0.12), reflecting that year of birth and sex account for a modest share of individual-level variation – the remainder is attributable to unmeasured factors including individual health history and diet.</p>
+</section>
+<section id="bayesian-confirmation" class="level3">
+<h3 class="anchored" data-anchor-id="bayesian-confirmation">Bayesian confirmation</h3>
+<p>A Bayesian fixed-effects model (brms) was used to confirm the LMM findings. Initial attempts to fit a random-intercept Bayesian model encountered convergence issues and a likelihood ratio test showed no significant difference between models with and without the random intercept (chi-squared = 0.46, df = 1, p = 0.5), so the final brms model used fixed effects only. Weakly informative normal priors were derived from LMM standard errors; a half-normal prior (mean = 0, SD = 0.2) was used for the residual standard deviation. The model was run with 4 chains, 10,000 iterations, and 5,000 warm-up draws.</p>
+<p>The brms posterior mean for the interaction was -0.04 (95% CI: -0.06 to -0.02), consistent with the LMM. All Rhat values were exactly 1.00 and effective sample sizes were all above 1,500, indicating good convergence and efficient sampling. Trace plots showed intermingling and stationarity across all four chains; autocorrelation plots showed a sharp decline to near zero within 1–2 lags. The posterior residual standard deviation (sigma = 0.88) was larger than the LMM residual SD (0.42), reflecting the absence of the random intercept in the Bayesian model. Posterior predictive checks showed the model adequately captured the central tendency of the data (observed mean 0.71 fell within the predicted distribution) but smoothed over the bimodal distribution of hypoplasia rates – a primary peak at zero driven by males born after 1975, and a secondary peak around two driven by females and older males. The bimodality of the random effects distribution is itself informative: it is driven by a subgroup of males born before 1975 with elevated baseline hypoplasia rates, consistent with the main finding that early childhood health improved specifically in males born after the market integration turning point.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Effect</th>
+<th>LMM Estimate</th>
+<th>LMM p</th>
+<th>brms Posterior Mean</th>
+<th>brms 95% CI</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Intercept (Female, 1975)</td>
+<td>1.22</td>
+<td>&lt;0.001</td>
+<td>1.22</td>
+<td>1.02 – 1.43</td>
+</tr>
+<tr class="even">
+<td>Year of birth</td>
+<td>-0.01</td>
+<td>0.51</td>
+<td>-0.01</td>
+<td>-0.02 – 0.01</td>
+</tr>
+<tr class="odd">
+<td>Male</td>
+<td>-0.27</td>
+<td>0.26</td>
+<td>-0.25</td>
+<td>-0.56 – 0.03</td>
+</tr>
+<tr class="even">
+<td>Year x Male interaction</td>
+<td>-0.04</td>
+<td><strong>0.02</strong></td>
+<td>-0.04</td>
+<td><strong>-0.06 – -0.02</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Interpretation:</strong> Both models identify the same pattern: birth year is not a significant predictor of hypoplasia rate for females, but the interaction term confirms that male rates declined significantly over time relative to female rates. The consistency across frequentist and Bayesian approaches strengthens confidence that the trend is real rather than an artifact of modeling choices.</p>
+</section>
+<section id="what-explains-the-turning-point" class="level3">
+<h3 class="anchored" data-anchor-id="what-explains-the-turning-point">What explains the turning point?</h3>
+<p>The 1975 turning point in male childhood health coincides with increasing visits to remote bush camps by researchers and tourists offering goods and currency in exchange for services – the onset of what this study terms remote market integration. Traditional explanations for sex-based health disparities do not apply to the bush-living Hadza: the missing women hypothesis is not supported by Tanzanian sex ratios; differential medical access does not apply (bush camps had no clinical access until 2018); educational benefits from school meals would not affect children under 5.5; and decades of observation have found no evidence of preferential parental treatment by sex.</p>
+<p>The bibliometric analysis provides contextual evidence for the mechanism. Research on the Hadza has historically prioritized men’s roles and activities; tourism reinforces this by offering hunting experiences with men rather than foraging with women. Men earn wages from tourist activities and exchange them for market goods, potentially increasing resource availability for male children through the same-sex learning and activity structures documented in Hadza childhood.</p>
+<p><strong>Figure 3. Timeline of Hadza research publications by sex focus, 1999–2024.</strong></p>
+<p><img src="revised-fig3.png" class="img-fluid"></p>
+<p><strong>Interpretation:</strong> Publications focused on Hadza men outnumber those focused on women through approximately 2015, when a cohort of female researchers entering the field shifted the balance. The external signal – reinforced by research attention and tourist economics – that men’s activities have higher value than women’s may have created subtle wealth disparities that differentially benefitted male children during the period captured by this study.</p>
+</section>
+<section id="research-bias-in-the-hadza-literature" class="level3">
+<h3 class="anchored" data-anchor-id="research-bias-in-the-hadza-literature">Research bias in the Hadza literature</h3>
+<p>Keyword co-occurrence networks built from publication titles and abstracts reveal structurally distinct research traditions for Hadza men and women. These figures were originally published as supplemental materials; they are presented here as the primary visualization of the bibliometric argument because the network structure is central to the interpretation of the health findings.</p>
+<p><strong>Figure 4. Keyword co-occurrence network for publications focused on Hadza women.</strong></p>
+<p><img src="revised-fig4-women-network.png" class="img-fluid"></p>
+<p><strong>Interpretation:</strong> The women’s network is dense and tightly interconnected (density = 0.89, modularity = 0.03), with 33 nodes and 470 edges. Despite the smaller node count, the average degree (28.48) is nearly double that of the men’s network, indicating that research on Hadza women clusters around a highly integrated set of topics. The dominant themes are postpartum health, cortisol and stress, social relationships, and demography – health and reproduction framed through a lens of women’s vulnerability and biological outcomes.</p>
+<p><strong>Figure 5. Keyword co-occurrence network for publications focused on Hadza men.</strong></p>
+<p><img src="revised-fig5-men-network.png" class="img-fluid"></p>
+<p><strong>Interpretation:</strong> The men’s network is sparse but modular (density = 0.21, modularity = 0.46), with 73 nodes and 564 edges organized into distinct thematic clusters: hunting reputation and status, genetics and aggression, paternal provisioning, subsistence skills, and wealth. The greater number of nodes reflects a longer research history and broader collaborative networks. The modularity signals distinct research programs – men’s biology, men’s economics, men’s social status – that have developed largely independently. Together the two networks show that decades of Hadza research have framed men as economic and social actors and women primarily through health and reproductive outcomes, an asymmetry that external market forces (researcher attention, tourist economics) have reinforced and that this study argues may have influenced the childhood health trends observed.</p>
+<hr>
+</section>
+</section>
+<section id="next-steps" class="level2">
+<h2 class="anchored" data-anchor-id="next-steps">Next Steps</h2>
+<p>The methodology introduced here – applying LEH to living populations with longitudinal ethnographic records – is broadly transferable. Comparative data collection on other indigenous populations that have undergone market integration over the past two to three generations would allow re-examination of health impacts from subsistence and economic transitions at a scale not previously feasible. For the Hadza specifically, documentation of father-son interactions in early childhood among contemporary bush-living Hadza would provide direct evidence to evaluate the same-sex learning pathway proposed here. Larger multi-population datasets would also enable re-examination of the sex-based patterns identified here with greater statistical power.</p>
+<hr>
+</section>
+<section id="study-design" class="level2">
+<h2 class="anchored" data-anchor-id="study-design">Study Design</h2>
+<div class="callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>This Analysis
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Scripts have been reformatted to current conventions (native pipe, <code>=</code> assignment, no deprecated syntax), figures regenerated as PNGs, and a reproducible environment added (<code>renv</code>, <code>requirements.txt</code>). No analytical changes were made from the published paper.</p>
+</div>
+</div>
+<p><strong>Data Source:</strong> Dental cast data were collected by J. Colette Berbesque in 2007 and 2009 from 101 adult Hadza living in six remote mobile bush camps around Lake Eyasi, Arusha region, Tanzania. Research was approved by Florida State University IRB (IRB00000446) and the Tanzania Commission for Science and Technology (COSTECH). Verbal informed consent was obtained. The final analytical sample after exclusions was 81 individuals. Bibliometric data were retrieved from dimensions.ai using search terms documented in <a href="https://doi.org/10.1080/00220388.2025.2555188">Berbesque &amp; Hoover (2025)</a>, Section 2.2.5.</p>
+<p><strong>Data Handling:</strong> Three individuals were excluded for dental wear exceeding 50% of the crown surface. Eight individuals under 18 were removed. One data entry error (age recorded as “15 5” rather than 15.5) was corrected. Year of birth was taken from long-standing Hadza demographic records (N. Blurton-Jones, F. W. Marlowe); where missing, it was estimated as collection year minus age. Hypoplasia rate was calculated as total LEH count divided by total anterior teeth observed. A tooth offset (log[totalTeeth/12]) was used to standardize for individuals with varying numbers of teeth.</p>
+<p><strong>Analytical Approach:</strong></p>
+<ol type="1">
+<li>Exploratory data visualization: time series scatterplots of hypoplasia rate by birth year, overall and by sex, to identify patterns and generate the study hypothesis.</li>
+<li>Descriptive statistics: means, medians, and standard deviations by sex; Welch’s t-test and Kruskal-Wallis test for sex differences in hypoplasia count and rate.</li>
+<li>Linear mixed-effects model (lme4): hypoplasia rate ~ birth year (centered 1975) * sex + offset(tooth offset) + (1|individual). Effect sizes via effectsize; significance via lmerTest; interaction visualization via effects.</li>
+<li>Sensitivity analysis: model re-run three times, removing each of three outliers individually; interaction remained significant in all cases.</li>
+<li>Bayesian confirmation (brms): fixed-effects model with weakly informative priors derived from LMM standard errors; 4 chains, 10,000 iterations; convergence assessed via Rhat and ESS.</li>
+<li>Bibliometric analysis (R: bibliometrix, ggplot2; Python: NetworkX, matplotlib): publication counts and keyword co-occurrence networks for Hadza men and women research using data from dimensions.ai.</li>
+</ol>
+<hr>
+</section>
+<section id="project-resources" class="level2">
+<h2 class="anchored" data-anchor-id="project-resources">Project Resources</h2>
+<p><strong>Repository:</strong> <a href="https://github.com/kchoover14/Hadza-Market-Integration">Hadza-Market-Integration</a></p>
+<p><strong>Data:</strong></p>
+<ul>
+<li><code>data2-hadza-depersonalized.csv</code> – depersonalized LEH data; personal identifiers removed from original field collection dataset</li>
+<li><code>data3-hadza-analysis.csv</code> – analytical dataset derived from depersonalized data; includes computed variables (hypoplasia rate, tooth offset, year of birth)</li>
+</ul>
+<p><strong>Code:</strong></p>
+<ul>
+<li><code>revised-analysis.R</code> – consolidated R script for data preparation, time series visualization, LMM, sensitivity analysis, and Bayesian model</li>
+<li><code>revised-bibmet.ipynb</code> – Jupyter notebook for bibliometric network analysis; see paper methods (Section 2.2.5) for data sourcing details</li>
+<li><code>1-depersonalize.qmd</code> – original depersonalization script; retained as publication artifact</li>
+<li><code>2-explore.qmd</code> – original exploratory analysis script; retained as publication artifact</li>
+<li><code>3-analysis.qmd</code> – original analysis script; retained as publication artifact</li>
+<li><code>4-bibmet.qmd</code> – original bibliometric script; retained as publication artifact</li>
+</ul>
+<p><strong>Project Artifacts:</strong></p>
+<ul>
+<li>Figures (n=5): <code>revised-fig1.png</code>, <code>revised-fig2.png</code>, <code>revised-fig3.png</code>, <code>revised-fig4-women-network.png</code>, <code>revised-fig5-men-network.png</code></li>
+<li>Preprint: retained as publication artifact</li>
+</ul>
+<p><strong>Environment:</strong></p>
+<ul>
+<li><code>renv.lock</code> and <code>renv/</code> – restore R environment with <code>renv::restore()</code></li>
+<li><code>requirements.txt</code> – install Python dependencies with <code>pip install -r requirements.txt</code></li>
+</ul>
+<p><strong>License:</strong></p>
+<ul>
+<li>Code and scripts © Kara C. Hoover, licensed under the <a href="LICENSE">MIT License</a>.</li>
+<li>Data, figures, and written content © Kara C. Hoover, licensed under <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/">CC BY-NC-ND 4.0</a>.</li>
+</ul>
+<hr>
+</section>
+<section id="tools-technologies" class="level2">
+<h2 class="anchored" data-anchor-id="tools-technologies">Tools &amp; Technologies</h2>
+<p><strong>Languages:</strong> R | Python</p>
+<p><strong>Tools:</strong> RStudio | Jupyter</p>
+<p><strong>Packages:</strong> lme4 | lmerTest | effectsize | effects | MuMIn | brms | bayesplot | ggplot2 | cowplot | dplyr | psych | car | lattice | bibliometrix | readxl | janitor | NetworkX | matplotlib</p>
+<hr>
+</section>
+<section id="expertise" class="level2">
+<h2 class="anchored" data-anchor-id="expertise">Expertise</h2>
+<p><strong>Domain Expertise:</strong> bioarchaeology | biological anthropology | hunter-gatherer health | developmental stress biomarkers | market integration | gender health disparities | bibliometrics | network analysis</p>
+<p><strong>Transferable Expertise:</strong> Demonstrates ability to bridge methodological traditions – adapting a technique from one field (bioarchaeology) to address a question in another (human biology and development economics) – and to triangulate findings across frequentist, Bayesian, and bibliometric approaches. The project also illustrates ethical data stewardship in research with indigenous communities, including depersonalization protocols and IRB-compliant data sharing.</p>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
