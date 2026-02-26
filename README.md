@@ -8,10 +8,7 @@ Berbesque, J. C., & Hoover, K. C. (2025). Market Integration Improves Traditiona
 
 ## Repository Contents
 
-This repo contains two sets of files: the original data and scripts associated with the published paper, and revised files (prefixed `revised-`) produced for the portfolio reanalysis.
-
-- **Original files:** `data2-hadza-depersonalized.csv`, `data3-hadza-analysis.csv`, `1-depersonalize.qmd`, `2-explore.qmd`, `3-analysis.qmd`, `4-bibmet.qmd` 
-- **Revised files:** `revised-analysis.R`, `revised-bibmet.py`, `revised-fig1.png`, `revised-fig2.png`, `revised-fig3.png`, `revised-fig4-women-network.png`, `revised-fig5-men-network.png` 
+This repo contains two sets of files. All files prefixed `revised-` are revised scripts and figures from the original publication. Revisions offer a fully reproducible end-to-end pipeline from raw data through ETL to results — including, **when needed**, data cleaning and wrangling scripts (revised from originals or created where none existed), code modernization, and the addition of environment management to future-proof the revised scripts. All other files are associated with the original publication. Occasionally, an original script may be updated with annotations for clarity; the commit history will note any such changes.
 
 ## Portfolio Page
 
